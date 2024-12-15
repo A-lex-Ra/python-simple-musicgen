@@ -1,14 +1,21 @@
 import tkinter as tk
 from tkinter import messagebox
+#from musicgen import 
 
 class Interface:
-    def __init__(self, master):
+    def __init__(self, master, on_slider_release_functions, generate_text_functions, update_playback_functions, stop_functions, play_functions):
         self.master = master
         self.master.title("Text Generator")
         self.master.geometry("400x300")
 
         self.current_time = 0
         self.is_playing = False
+
+        self.on_slider_release_functions = on_slider_release_functions
+        self.generate_text_functions = generate_text_functions
+        self.update_playback_functions = update_playback_functions
+        self.stop_functions = stop_functions
+        self.play_functions = play_functions
 
         self.setup_ui()
 
@@ -95,6 +102,11 @@ class Interface:
             self.stop()
 
     def on_slider_release(self, event):
+        # вызов функций on_slider_release_functions
+        if self.on_slider_release_functions:
+            for func in self.on_slider_release_functions:
+                func(self.slider.get())
+
         self.current_time = self.slider.get()
         self.update_slider(self.current_time)
 
@@ -117,5 +129,12 @@ class Interface:
             self.text_input.insert("1.0", "Введите текст")
 
 main_window = tk.Tk()
-app = Interface(main_window)
+app = Interface(
+    main_window,
+    on_slider_release_functions=[],
+    generate_text_functions=[],
+    update_playback_functions=[],
+    stop_functions=[],
+    play_functions=[]
+)
 main_window.mainloop()
