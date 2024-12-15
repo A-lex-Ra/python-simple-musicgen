@@ -129,6 +129,7 @@ class Interface:
             self.text_input.insert("1.0", "Введите текст")
 
 main_window = tk.Tk()
+# добавляем функции, которые хотим вызвать
 app = Interface(
     main_window,
     on_slider_release_functions=[],
