@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from musicgen import PromptToMusicGenerator
+from pygame import mixer
 
 class Interface:
     def __init__(self, master, on_slider_release_functions, generate_text_functions, update_playback_functions, stop_functions, play_functions):
@@ -65,8 +66,7 @@ class Interface:
             seconds = int(seconds)
 
             if self.generate_text_functions:
-                for func in self.generate_text_functions:
-                    func(input_text, seconds)
+                self.generate_text_functions[0](input_text, seconds)
 
             self.slider.config(to=seconds)
             self.slider.set(0)
@@ -91,11 +91,17 @@ class Interface:
 
     def play(self):
         if not self.is_playing:
+            if self.play_functions:
+                for func in self.play_functions:
+                    func()
             self.is_playing = True
             self.update_playback()
 
     def stop(self):
         self.is_playing = False
+        if self.stop_functions:
+            for func in self.stop_functions:
+                func()
 
     def update_playback(self):
         if self.is_playing and self.current_time < self.slider.cget("to"):
@@ -135,13 +141,19 @@ class Interface:
 
 main_window = tk.Tk()
 g = PromptToMusicGenerator()
+
+mixer.init()
+def play_music():
+    mixer.music.load("musicgen_out.wav")
+    mixer.music.play()
+
 # добавляем функции, которые хотим вызвать
 app = Interface(
     main_window,
     on_slider_release_functions=[],
     generate_text_functions=[g.generate],
     update_playback_functions=[],
-    stop_functions=[],
-    play_functions=[]
+    stop_functions=[mixer.music.stop],
+    play_functions=[play_music]
 )
 main_window.mainloop()

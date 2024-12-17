@@ -13,6 +13,8 @@ class PromptToMusicGenerator:
         self.model.to(self.device);
     
     def generate(self, prompt_str, duration_seconds):
+        if duration_seconds == 0:
+            return
         framerate = self.model.config.audio_encoder.frame_rate
         print("framerate:",framerate)
         all_tokens_count = framerate * duration_seconds
@@ -47,6 +49,6 @@ class PromptToMusicGenerator:
             sampling_rate = self.model.config.audio_encoder.sampling_rate
             print("Next iteration. sampling rate:",sampling_rate)
 
-            scipy.io.wavfile.write("musicgen_out"+str(i)+".wav", rate=sampling_rate, data=last_step_audio_values[0, 0].cpu().numpy())
-            
+        scipy.io.wavfile.write("musicgen_out.wav", rate=sampling_rate, data=last_step_audio_values[0, 0].cpu().numpy())
+        # return last_step_audio_values[0, 0].cpu().numpy()
 
