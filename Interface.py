@@ -93,7 +93,7 @@ class Interface:
         if not self.is_playing:
             if self.play_functions:
                 for func in self.play_functions:
-                    func()
+                    func(self.current_time)
             self.is_playing = True
             self.update_playback()
 
@@ -143,9 +143,9 @@ main_window = tk.Tk()
 g = PromptToMusicGenerator()
 
 mixer.init()
-def play_music():
+def play_music(from_time):
     mixer.music.load("musicgen_out.wav")
-    mixer.music.play()
+    mixer.music.play(start=from_time)
 
 # добавляем функции, которые хотим вызвать
 app = Interface(
