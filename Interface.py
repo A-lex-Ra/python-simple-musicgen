@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-#from musicgen import 
+from musicgen import PromptToMusicGenerator
 
 class Interface:
     def __init__(self, master, on_slider_release_functions, generate_text_functions, update_playback_functions, stop_functions, play_functions):
@@ -63,6 +63,11 @@ class Interface:
         seconds = self.seconds_input.get().strip()
         if input_text and seconds.isdigit():
             seconds = int(seconds)
+
+            if self.generate_text_functions:
+                for func in self.generate_text_functions:
+                    func(input_text, seconds)
+
             self.slider.config(to=seconds)
             self.slider.set(0)
             self.update_slider(0)
@@ -129,11 +134,12 @@ class Interface:
             self.text_input.insert("1.0", "Введите текст")
 
 main_window = tk.Tk()
+g = PromptToMusicGenerator()
 # добавляем функции, которые хотим вызвать
 app = Interface(
     main_window,
     on_slider_release_functions=[],
-    generate_text_functions=[],
+    generate_text_functions=[g.generate],
     update_playback_functions=[],
     stop_functions=[],
     play_functions=[]

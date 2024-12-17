@@ -49,5 +49,4 @@ class PromptToMusicGenerator:
 
             scipy.io.wavfile.write("musicgen_out"+str(i)+".wav", rate=sampling_rate, data=last_step_audio_values[0, 0].cpu().numpy())
             
-g = PromptToMusicGenerator()
-g.generate("waltz mid-century piano music", 120)
+
